@@ -1,9 +1,32 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>GCI QR Scanner</title><script src="https://unpkg.com/html5-qrcode@2.3.8"></script><style>body{font:16px Arial,sans-serif;background:#f1f5f9;color:#1e293b;text-align:center;padding:20px}main{max-width:450px;margin:auto;background:white;padding:20px;border-radius:20px}button,a{display:inline-block;padding:12px 18px;border:0;border-radius:8px;background:#0284c7;color:white;text-decoration:none;cursor:pointer;margin:5px}button:disabled{opacity:.5}#reader{margin:16px auto}#result{overflow-wrap:anywhere}</style></head><body><main><h2>GCI Inventory Scanner</h2><p>Asset Tracking &amp; Audit Control</p><button id="start">Aktifkan Kamera</button><button id="stop" disabled>Stop Kamera</button><div id="reader"></div><p id="result" role="status"></p><a id="back" hidden>Kembali ke Inventory</a></main><script>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>GCI QR Scanner</title><script src="https://unpkg.com/html5-qrcode@2.3.8"></script><style>body{font:16px Arial,sans-serif;background:#f1f5f9;color:#1e293b;text-align:center;padding:20px}main{max-width:450px;margin:auto;background:white;padding:20px;border-radius:20px}button,a{display:inline-block;padding:12px 18px;border:0;border-radius:8px;background:#0284c7;color:white;text-decoration:none;cursor:pointer;margin:5px}button:disabled{opacity:.5}#reader{margin:16px auto}#result{overflow-wrap:anywhere}[hidden]{display:none!important}</style></head><body><main><h2>GCI Inventory Scanner</h2><p>Asset Tracking &amp; Audit Control</p><button id="start">Aktifkan Kamera</button><button id="stop" disabled>Stop Kamera</button><div id="reader"></div><p id="result" role="status"></p><a id="back" hidden>Kembali ke Inventory</a></main><script>
 const start=document.getElementById('start'),stop=document.getElementById('stop'),result=document.getElementById('result'),back=document.getElementById('back');
 let returnUrl=null, scanner=null, busy=false, running=false, detected=false;
 try{const raw=new URLSearchParams(location.hash.slice(1)).get('return');if(raw){const u=new URL(raw);if(u.origin==='https://script.google.com' && /^\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(u.pathname)&&!u.search&&!u.hash){returnUrl=u;back.href=u.href;back.hidden=false;}}}catch(e){}
 async function stopCamera(){if(running){await scanner.stop();running=false;}stop.disabled=true;start.disabled=false;}
-start.onclick=async()=>{if(busy||running)return;busy=true;detected=false;start.disabled=true;result.textContent='Membuka kamera...';try{if(!scanner)scanner=new Html5Qrcode('reader');await scanner.start({facingMode:'environment'},{fps:10,qrbox:220},async code=>{if(detected)return;detected=true;result.textContent='Kode Aset: '+code;try{await stopCamera();}catch(e){result.textContent+=' | '+e;}if(returnUrl){const target=new URL(returnUrl.href);target.hash=new URLSearchParams({asset:code}).toString();back.href=target.href;back.textContent='Buka Detail Aset';location.assign(target.href);}},()=>{});running=true;stop.disabled=false;if(!detected)result.textContent='Arahkan kamera ke QR Code.';}catch(e){result.textContent='Error kamera: '+(e.message||e);start.disabled=false;}finally{busy=false;}};
+async function startCamera(){
+  if(busy||running)return;
+  busy=true;detected=false;start.disabled=true;result.textContent='Membuka kamera...';
+  let pending=null;
+  async function finish(code){
+    result.textContent='Kode Aset: '+code;
+    try{await stopCamera();}catch(e){result.textContent+=' | '+e;}
+    if(returnUrl){const target=new URL(returnUrl.href);target.hash=new URLSearchParams({asset:code}).toString();back.href=target.href;back.textContent='Buka Detail Aset';location.assign(target.href);}
+  }
+  try{
+    if(!scanner)scanner=new Html5Qrcode('reader');
+    await scanner.start({facingMode:'environment'},{fps:10,qrbox:220},code=>{
+      if(detected)return;detected=true;
+      if(!running){pending=code;return;}
+      finish(code);
+    },()=>{});
+    running=true;stop.disabled=false;
+    if(pending!==null)await finish(pending);
+    else if(!detected)result.textContent='Arahkan kamera ke QR Code.';
+  }catch(e){result.textContent='Kamera belum dapat dibuka otomatis. Tekan Aktifkan Kamera untuk mencoba lagi. '+(e.message||e);start.disabled=false;}
+  finally{busy=false;}
+}
+start.onclick=startCamera;
+window.addEventListener('load',startCamera,{once:true});
 stop.onclick=async()=>{if(busy)return;try{await stopCamera();result.textContent='Kamera dihentikan.';}catch(e){result.textContent=String(e);}};
 </script></body></html>
