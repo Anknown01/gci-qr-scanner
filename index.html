@@ -1,86 +1,9 @@
-
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GCI QR Scanner</title>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #f1f5f9;
-      padding: 20px;
-    }
-
-    #reader {
-      max-width: 450px;
-      margin: 20px auto;
-    }
-
-    button {
-      background: #0284c7;
-      color: white;
-      padding: 14px 25px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-
-<body>
-
-  <h2>GCI Inventory Scanner</h2>
-  <p>Asset Tracking & Audit Control</p>
-
-  <button id="start" onclick="startScan()">
-    Aktifkan Kamera
-  </button>
-
-  <div id="reader"></div>
-  <p id="result"></p>
-
-  <script>
-    const scanner = new Html5Qrcode("reader");
-    const button = document.getElementById("start");
-    const result = document.getElementById("result");
-    let detected = false;
-
-    async function startScan() {
-      button.disabled = true;
-      detected = false;
-      result.textContent = "";
-
-      try {
-        await scanner.start(
-          { facingMode: "environment" },
-          { fps: 10, qrbox: 220 },
-
-          async function(code) {
-            if (detected) return;
-            detected = true;
-            result.textContent = "Kode Aset: " + code;
-
-            try {
-              await scanner.stop();
-              button.disabled = false;
-            } catch (error) {
-              result.textContent += " | " + error;
-            }
-          },
-
-          function() {}
-        );
-
-      } catch (error) {
-        result.textContent = "Error: " + error;
-        button.disabled = false;
-      }
-    }
-  </script>
-
-</body>
-</html>
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>GCI QR Scanner</title><script src="https://unpkg.com/html5-qrcode@2.3.8"></script><style>body{font:16px Arial,sans-serif;background:#f1f5f9;color:#1e293b;text-align:center;padding:20px}main{max-width:450px;margin:auto;background:white;padding:20px;border-radius:20px}button,a{display:inline-block;padding:12px 18px;border:0;border-radius:8px;background:#0284c7;color:white;text-decoration:none;cursor:pointer;margin:5px}button:disabled{opacity:.5}#reader{margin:16px auto}#result{overflow-wrap:anywhere}</style></head><body><main><h2>GCI Inventory Scanner</h2><p>Asset Tracking &amp; Audit Control</p><button id="start">Aktifkan Kamera</button><button id="stop" disabled>Stop Kamera</button><div id="reader"></div><p id="result" role="status"></p><a id="back" hidden>Kembali ke Inventory</a></main><script>
+const start=document.getElementById('start'),stop=document.getElementById('stop'),result=document.getElementById('result'),back=document.getElementById('back');
+let returnUrl=null, scanner=null, busy=false, running=false, detected=false;
+try{const raw=new URLSearchParams(location.hash.slice(1)).get('return');if(raw){const u=new URL(raw);if(u.origin==='https://script.google.com' && /^\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(u.pathname)&&!u.search&&!u.hash){returnUrl=u;back.href=u.href;back.hidden=false;}}}catch(e){}
+async function stopCamera(){if(running){await scanner.stop();running=false;}stop.disabled=true;start.disabled=false;}
+start.onclick=async()=>{if(busy||running)return;busy=true;detected=false;start.disabled=true;result.textContent='Membuka kamera...';try{if(!scanner)scanner=new Html5Qrcode('reader');await scanner.start({facingMode:'environment'},{fps:10,qrbox:220},async code=>{if(detected)return;detected=true;result.textContent='Kode Aset: '+code;try{await stopCamera();}catch(e){result.textContent+=' | '+e;}if(returnUrl){const target=new URL(returnUrl.href);target.hash=new URLSearchParams({asset:code}).toString();back.href=target.href;back.textContent='Buka Detail Aset';location.assign(target.href);}},()=>{});running=true;stop.disabled=false;if(!detected)result.textContent='Arahkan kamera ke QR Code.';}catch(e){result.textContent='Error kamera: '+(e.message||e);start.disabled=false;}finally{busy=false;}};
+stop.onclick=async()=>{if(busy)return;try{await stopCamera();result.textContent='Kamera dihentikan.';}catch(e){result.textContent=String(e);}};
+</script></body></html>
