@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GCI QR Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f1f5f9;
+      padding: 20px;
+    }
+
+    #reader {
+      max-width: 450px;
+      margin: 20px auto;
+    }
+
+    button {
+      background: #0284c7;
+      color: white;
+      padding: 14px 25px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>GCI Inventory Scanner</h2>
+  <p>Asset Tracking & Audit Control</p>
+
+  <button id="start" onclick="startScan()">
+    Aktifkan Kamera
+  </button>
+
+  <div id="reader"></div>
+  <p id="result"></p>
+
+  <script>
+    const scanner = new Html5Qrcode("reader");
+    const button = document.getElementById("start");
+    const result = document.getElementById("result");
+    let detected = false;
+
+    async function startScan() {
+      button.disabled = true;
+      detected = false;
+      result.textContent = "";
+
+      try {
+        await scanner.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: 220 },
+
+          async function(code) {
+            if (detected) return;
+            detected = true;
+            result.textContent = "Kode Aset: " + code;
+
+            try {
+              await scanner.stop();
+              button.disabled = false;
+            } catch (error) {
+              result.textContent += " | " + error;
+            }
+          },
+
+          function() {}
+        );
+
+      } catch (error) {
+        result.textContent = "Error: " + error;
+        button.disabled = false;
+      }
+    }
+  </script>
+
+</body>
+</html>
