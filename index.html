@@ -4,92 +4,205 @@
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1">
+<meta name="viewport"
+  content="width=device-width,initial-scale=1">
 
-  <meta name="referrer" content="no-referrer">
+<meta name="referrer"
+  content="no-referrer">
 
-  <title>GCI QR Scanner V3.5</title>
+<title>Greenchem Inventory Scanner</title>
 
-  <script src="https://unpkg.com/html5-qrcode@2.3.8"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8"></script>
 
-  <style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
-      text-align: center;
-      padding: 20px;
-      margin: 0;
-    }
+<style>
 
-    main {
-      max-width: 450px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 20px;
-      box-sizing: border-box;
-    }
+* {
+  box-sizing:border-box;
+}
 
-    h2 {
-      margin-top: 10px;
-    }
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f4f7f5;
+  color:#193b27;
+  padding:20px;
+}
 
-    button, a {
-      display: inline-block;
-      padding: 12px 18px;
-      border: 0;
-      border-radius: 8px;
-      background: #0284c7;
-      color: white;
-      text-decoration: none;
-      cursor: pointer;
-      margin: 5px;
-      font-size: 14px;
-    }
+main {
+  max-width:490px;
+  margin:20px auto;
+  background:white;
+  border:1px solid #dfe9df;
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 12px 35px #173e2410;
+}
 
-    button:disabled {
-      opacity: .5;
-    }
+.header {
+  background:linear-gradient(135deg,#073b24,#176334);
+  padding:25px;
+  text-align:center;
+  color:white;
+  border-bottom:4px solid #a9d34c;
+}
 
-    #reader {
-      width: 100%;
-      margin: 16px auto;
-      overflow: hidden;
-      border-radius: 12px;
-    }
+.logo-box {
+  width:135px;
+  background:white;
+  border-radius:12px;
+  padding:8px;
+  margin:0 auto 15px;
+}
 
-    #reader video {
-      border-radius: 12px;
-    }
+.logo-box img {
+  width:100%;
+  height:80px;
+  object-fit:contain;
+}
 
-    #result {
-      overflow-wrap: anywhere;
-      line-height: 1.5;
-    }
+.header h2 {
+  margin:0 0 7px;
+  font-size:21px;
+}
 
-    #version {
-      color: #64748b;
-      font-size: 12px;
-    }
+.header p {
+  margin:0;
+  color:#e0eee1;
+  font-size:12px;
+}
 
-    #back {
-      background: #64748b;
-    }
+.version {
+  display:inline-block;
+  margin-top:12px;
+  padding:6px 12px;
+  border:1px solid #ffffff35;
+  border-radius:30px;
+  font-size:11px;
+}
 
-    #detail {
-      background: #16a34a;
-    }
+.content {
+  padding:22px;
+  text-align:center;
+}
 
-    [hidden] {
-      display: none !important;
-    }
+.scanner-title {
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:8px;
+}
 
-  </style>
+#camera-status {
+  font-size:12px;
+  font-weight:600;
+  color:#176334;
+  background:#e9f3e5;
+  padding:8px 12px;
+  border-radius:30px;
+  display:inline-block;
+  margin:5px 0;
+}
+
+#reader {
+  width:100%;
+  margin:18px auto;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+#reader video {
+  border-radius:14px;
+}
+
+#result {
+  font-size:14px;
+  color:#53695a;
+  line-height:1.6;
+  overflow-wrap:anywhere;
+}
+
+button,a {
+  font-family:inherit;
+  font-size:14px;
+  font-weight:600;
+  border:0;
+  border-radius:10px;
+  padding:13px 17px;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+#start {
+  width:100%;
+  background:#176334;
+  color:white;
+}
+
+#stop {
+  background:#edf3ec;
+  color:#176334;
+  width:100%;
+  margin-bottom:12px;
+}
+
+#back {
+  display:block;
+  width:100%;
+  border:1px solid #176334;
+  color:#176334;
+  background:white;
+  margin-top:10px;
+}
+
+#detail {
+  display:block;
+  width:100%;
+  background:#176334;
+  color:white;
+  margin:10px 0;
+}
+
+.footer {
+  border-top:1px solid #e8eee7;
+  color:#748477;
+  font-size:11px;
+  text-align:center;
+  padding:15px;
+}
+
+[hidden] {
+  display:none!important;
+}
+
+button:disabled {
+  opacity:.5;
+}
+
+@media(max-width:600px) {
+
+  body {
+    padding:10px;
+  }
+
+  main {
+    margin:0 auto;
+    border-radius:16px;
+  }
+
+  .header {
+    padding:20px;
+  }
+
+  .content {
+    padding:16px;
+  }
+
+}
+
+</style>
 
 </head>
 
@@ -97,108 +210,91 @@
 
 <main>
 
-  <h2>GCI Inventory Scanner</h2>
+  <header class="header">
 
-  <p>Asset Tracking &amp; Audit Control</p>
+    <div class="logo-box">
+      <img src="./logo-greenchem.png"
+        alt="Greenchem"
+        onerror="this.parentElement.hidden=true">
+    </div>
 
-  <div id="version">
-    Auto Scanner V3.5
-  </div>
+    <h2>Greenchem Inventory Scanner</h2>
 
-  <button id="start" hidden>
-    Aktifkan Kamera
-  </button>
+    <p>Asset Tracking & Audit Control</p>
 
-  <button id="stop" hidden disabled>
-    Stop Kamera
-  </button>
+    <div class="version">
+      V4.0 Enterprise
+    </div>
 
-  <div id="reader"></div>
+  </header>
 
-  <p id="result" role="status">
-    Menyiapkan kamera otomatis...
-  </p>
+  <section class="content">
 
-  <a id="detail" hidden>
-    Buka Detail Aset
-  </a>
+    <div class="scanner-title">
+      <i class="bi bi-qr-code-scan"></i>
+      Scan QR Aset
+    </div>
 
-  <a id="back">
-    Kembali ke Inventory
-  </a>
+    <div id="camera-status">
+      Menyiapkan kamera
+    </div>
+
+    <div id="reader"></div>
+
+    <p id="result" role="status">
+      Kamera akan menyala otomatis.
+    </p>
+
+    <button id="start" hidden>
+      <i class="bi bi-camera-video"></i>
+      Aktifkan Kamera
+    </button>
+
+    <button id="stop" hidden>
+      <i class="bi bi-stop-circle"></i>
+      Stop Kamera
+    </button>
+
+    <a id="detail" hidden>
+      Buka Detail Aset
+    </a>
+
+    <a id="back">
+      <i class="bi bi-arrow-left"></i>
+      Kembali ke Inventory
+    </a>
+
+  </section>
+
+  <footer class="footer">
+    PT Green Chemicals Indonesia
+    <br>
+    Developed by IT Department
+  </footer>
 
 </main>
 
 <script>
 
-/* ==========================================
-   URL INVENTORY TERBARU
-========================================== */
-
 const INVENTORY_URL =
-  "https://script.google.com/macros/s/AKfycbx4rjYcR9NCMBP_3UWJM1xVC_LhEyVhRgGp8l3IY60yCaDYVirsaPNe8ldzGcsKLfPC7g/exec";
+  'https://script.google.com/macros/s/AKfycbx4rjYcR9NCMBP_3UWJM1xVC_LhEyVhRgGp8l3IY60yCaDYVirsaPNe8ldzGcsKLfPC7g/exec';
 
-
-/* ==========================================
-   ELEMENT
-========================================== */
-
-const start =
-  document.getElementById('start');
-
-const stop =
-  document.getElementById('stop');
-
-const result =
-  document.getElementById('result');
-
-const back =
-  document.getElementById('back');
-
-const detail =
-  document.getElementById('detail');
+const start = document.getElementById('start');
+const stop = document.getElementById('stop');
+const result = document.getElementById('result');
+const back = document.getElementById('back');
+const detail = document.getElementById('detail');
+const status = document.getElementById('camera-status');
 
 let scanner = null;
-
 let busy = false;
-
 let running = false;
-
 let detected = false;
+let finishing = false;
+let leaving = false;
 
 
-/* ==========================================
-   VALIDASI URL INVENTORY
-========================================== */
-
-function validInventoryUrl(value) {
-
-  try {
-
-    const url = new URL(value);
-
-    return (
-
-      url.origin ===
-      'https://script.google.com' &&
-
-      url.href ===
-      new URL(INVENTORY_URL).href
-
-    );
-
-  } catch(error) {
-
-    return false;
-
-  }
-
-}
-
-
-/* ==========================================
-   AMBIL URL INVENTORY
-========================================== */
+/* VALIDASI URL KEMBALI */
 
 function getInventoryUrl() {
 
@@ -211,14 +307,24 @@ function getInventoryUrl() {
   );
 
   const incoming =
-
     hash.get('return') ||
-
     query.get('return');
 
-  if(incoming && validInventoryUrl(incoming)) {
+  try {
 
-    return new URL(incoming);
+    const url = new URL(
+      incoming || INVENTORY_URL
+    );
+
+    if(url.href === new URL(INVENTORY_URL).href) {
+
+      return url;
+
+    }
+
+  } catch(error) {
+
+    console.error(error);
 
   }
 
@@ -226,61 +332,52 @@ function getInventoryUrl() {
 
 }
 
-
 const returnUrl = getInventoryUrl();
 
 back.href = returnUrl.href;
 
 
-/* ==========================================
-   STOP KAMERA
-========================================== */
+/* STOP CAMERA */
 
 async function stopCamera() {
 
-  try {
+  if(scanner && running) {
 
-    if(scanner && running) {
+    await scanner.stop();
 
-      await scanner.stop();
-
-      running = false;
-
-    }
-
-  } finally {
-
-    stop.disabled = true;
-
-    stop.hidden = true;
-
-    start.disabled = false;
-
-    start.hidden = false;
+    running = false;
 
   }
+
+  stop.hidden = true;
+
+  start.hidden = false;
+  start.disabled = false;
 
 }
 
 
-/* ==========================================
-   HASIL SCAN
-========================================== */
+/* HASIL QR */
 
 async function finishScan(code) {
+
+  if(finishing || leaving) return;
 
   code = String(code || '').trim();
 
   if(!code) {
 
     detected = false;
-
     return;
 
   }
 
+  finishing = true;
+
+  status.textContent = 'QR berhasil terbaca';
+
   result.textContent =
-    'Kode Aset: ' + code;
+    'Membuka detail aset: '+code;
 
   try {
 
@@ -292,17 +389,14 @@ async function finishScan(code) {
 
   }
 
-  start.hidden = true;
+  if(leaving) return;
 
-  result.textContent =
-    'Aset terbaca. Membuka detail aset...';
+  start.hidden = true;
+  stop.hidden = true;
 
   const target = new URL(returnUrl.href);
 
-  target.searchParams.set(
-    'asset',
-    code
-  );
+  target.searchParams.set('asset',code);
 
   target.searchParams.set(
     '_t',
@@ -318,26 +412,28 @@ async function finishScan(code) {
 }
 
 
-/* ==========================================
-   START KAMERA OTOMATIS
-========================================== */
+/* AUTO START CAMERA */
 
 async function startCamera() {
 
-  if(busy || running) return;
+  if(busy || running || finishing || leaving) {
+
+    return;
+
+  }
 
   busy = true;
 
   detected = false;
 
+  start.disabled = true;
+  start.hidden = true;
   detail.hidden = true;
 
-  start.disabled = true;
-
-  start.hidden = true;
+  status.textContent = 'Membuka kamera...';
 
   result.textContent =
-    'Membuka kamera...';
+    'Mohon izinkan akses kamera jika diminta.';
 
   let pending = null;
 
@@ -352,27 +448,24 @@ async function startCamera() {
     await scanner.start(
 
       {
-        facingMode: 'environment'
+        facingMode:'environment'
       },
 
       {
-        fps: 10,
+        fps:10,
 
-        qrbox: function(width,height) {
+        qrbox:function(width,height) {
 
           const size = Math.min(
-            250,
+            280,
             Math.floor(
-              Math.min(width,height) * 0.75
+              Math.min(width,height)*.75
             )
           );
 
           return {
-
-            width: size,
-
-            height: size
-
+            width:size,
+            height:size
           };
 
         }
@@ -381,7 +474,7 @@ async function startCamera() {
 
       function(code) {
 
-        if(detected) return;
+        if(detected || leaving) return;
 
         detected = true;
 
@@ -403,34 +496,39 @@ async function startCamera() {
 
     running = true;
 
-    stop.disabled = false;
+    if(leaving) {
+
+      await stopCamera();
+      return;
+
+    }
 
     stop.hidden = false;
+
+    status.textContent = 'Kamera aktif';
+
+    result.textContent =
+      'Arahkan kamera ke QR Code aset.';
 
     if(pending !== null) {
 
       await finishScan(pending);
 
-    } else if(!detected) {
-
-      result.textContent =
-        'Arahkan kamera ke QR Code aset.';
-
     }
 
   } catch(error) {
 
+    status.textContent =
+      'Kamera belum aktif';
+
     result.textContent =
-
-      'Kamera tidak dapat dibuka otomatis. ' +
-
+      'Kamera belum dapat dibuka otomatis. '+
       'Tekan Aktifkan Kamera untuk mencoba lagi.';
 
     console.error(error);
 
-    start.disabled = false;
-
     start.hidden = false;
+    start.disabled = false;
 
   } finally {
 
@@ -441,15 +539,15 @@ async function startCamera() {
 }
 
 
-/* ==========================================
-   TOMBOL KAMERA
-========================================== */
+/* CAMERA BUTTON */
 
 start.onclick = startCamera;
 
 stop.onclick = async function() {
 
-  if(busy) return;
+  if(busy || finishing) return;
+
+  busy = true;
 
   try {
 
@@ -457,26 +555,33 @@ stop.onclick = async function() {
 
     detected = false;
 
+    status.textContent =
+      'Kamera dihentikan';
+
     result.textContent =
-      'Kamera dihentikan.';
+      'Tekan Aktifkan Kamera untuk scan kembali.';
 
   } catch(error) {
 
     result.textContent =
       String(error);
 
+  } finally {
+
+    busy = false;
+
   }
 
 };
 
 
-/* ==========================================
-   KEMBALI KE INVENTORY
-========================================== */
+/* BACK BUTTON */
 
 back.onclick = function(event) {
 
   event.preventDefault();
+
+  leaving = true;
 
   const target = new URL(returnUrl.href);
 
@@ -490,20 +595,14 @@ back.onclick = function(event) {
 };
 
 
-/* ==========================================
-   AUTO START
-========================================== */
+/* INITIAL START */
 
 if(document.readyState === 'loading') {
 
   document.addEventListener(
-
     'DOMContentLoaded',
-
     startCamera,
-
     {once:true}
-
   );
 
 } else {
@@ -513,9 +612,7 @@ if(document.readyState === 'loading') {
 }
 
 
-/* ==========================================
-   RESET HALAMAN CACHE
-========================================== */
+/* RESET CACHED PAGE */
 
 window.addEventListener(
   'pageshow',
@@ -533,5 +630,4 @@ window.addEventListener(
 </script>
 
 </body>
-
 </html>
